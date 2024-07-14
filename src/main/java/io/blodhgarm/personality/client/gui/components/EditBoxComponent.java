@@ -4,19 +4,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.blodhgarm.personality.mixin.client.accessor.EditBoxAccessor;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.core.Color;
-import io.wispforest.owo.ui.core.CursorStyle;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Size;
 import io.wispforest.owo.ui.core.Sizing;
 import io.wispforest.owo.ui.inject.ComponentStub;
 import io.blodhgarm.personality.mixin.client.accessor.EditBoxWidgetAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.EditBox;
 import net.minecraft.client.gui.widget.EditBoxWidget;
 import net.minecraft.client.input.CursorMovement;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 /**
@@ -134,14 +133,14 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
     }
 
     @Override
-    protected void renderContents(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    protected void renderContents(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
 
         int x = this.x() + ((this.position == ScrollBarSide.RIGHT) ? 0 : 8);
 
         String string = this.editBox.getText();
         if (string.isEmpty() && !this.isFocused()) {
-            textRenderer.drawTrimmed(matrices, this.placeholder, x + this.getPadding(), this.y() + this.getPadding(), this.width - this.getPaddingDoubled(), -857677600);
+            drawContext.drawTextWrapped(textRenderer, this.placeholder, x + this.getPadding(), this.y() + this.getPadding(), this.width - this.getPaddingDoubled(), -857677600);
         } else {
             int i = this.editBox.getCursor();
             boolean bl = this.isFocused() && this.tick / 6 % 2 == 0;
@@ -154,14 +153,14 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
                 boolean bl3 = this.isVisible(l, l + 9);
                 if (bl && bl2 && i >= substring.beginIndex() && i <= substring.endIndex()) {
                     if (bl3) {
-                        j = textRenderer.drawWithShadow(matrices, string.substring(substring.beginIndex(), i), (float)(x + this.getPadding()), (float)l, -2039584) - 1;
-                        DrawableHelper.fill(matrices, j, l - 1, j + 1, l + 1 + 9, -3092272);
-                        textRenderer.drawWithShadow(matrices, string.substring(i, substring.endIndex()), (float)j, (float)l, -2039584);
+                        j = drawContext.drawTextWithShadow(textRenderer, string.substring(substring.beginIndex(), i), (x + this.getPadding()), l, -2039584) - 1;
+                        drawContext.fill(j, l - 1, j + 1, l + 1 + 9, -3092272);
+                        drawContext.drawTextWithShadow(textRenderer, string.substring(i, substring.endIndex()), j, l, -2039584);
                     }
                 } else {
                     if (bl3) {
-                        j = textRenderer
-                                .drawWithShadow(matrices, string.substring(substring.beginIndex(), substring.endIndex()), (float)(x + this.getPadding()), (float)l, -2039584)
+                        j = drawContext
+                                .drawTextWithShadow(textRenderer, string.substring(substring.beginIndex(), substring.endIndex()), (x + this.getPadding()), l, -2039584)
                                 - 1;
                     }
 
@@ -172,7 +171,7 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
             }
 
             if (bl && !bl2 && this.isVisible(k, k + 9)) {
-                textRenderer.drawWithShadow(matrices, "_", (float)j, (float)k, -3092272);
+                drawContext.drawTextWithShadow(textRenderer, "_", j, k, -3092272);
             }
 
             if (this.editBox.hasSelection()) {
@@ -197,7 +196,7 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
                                 o = textRenderer.getWidth(string.substring(substring3.beginIndex(), substring2.endIndex()));
                             }
 
-                            this.drawSelection(matrices, m + n, l, m + o, l + 9);
+                            this.drawSelection(drawContext, m + n, l, m + o, l + 9);
                         }
 
                         l += 9;
@@ -209,24 +208,24 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (this.visible) {
-            this.drawBox(matrices);
+            this.drawBox(drawContext);
 
             int x = this.x() + ((this.position == ScrollBarSide.RIGHT) ? 0 : 8);
-            enableScissor(x + 1, this.y() + 1, x + this.width - 1, this.y() + this.height - 1);
+            drawContext.enableScissor(x + 1, this.y() + 1, x + this.width - 1, this.y() + this.height - 1);
 
-            matrices.push();
-            matrices.translate(0.0, -this.getScrollY(), 0.0);
-            this.renderContents(matrices, mouseX, mouseY, delta);
-            matrices.pop();
-            disableScissor();
-            this.renderOverlay(matrices);
+            drawContext.push();
+            drawContext.translate(0.0, -this.getScrollY(), 0.0);
+            this.renderContents(drawContext, mouseX, mouseY, delta);
+            drawContext.pop();
+            drawContext.disableScissor();
+            this.renderOverlay(drawContext);
         }
     }
 
     @Override
-    protected void drawScrollbar(MatrixStack matrices) {
+    protected void drawScrollbar(DrawContext drawContext) {
         int i = this.getScrollbarThumbHeight();
         int j = this.x() + ((this.position == ScrollBarSide.RIGHT) ? this.width : 0);
         int k = j + 8;
@@ -236,29 +235,29 @@ public class EditBoxComponent extends EditBoxWidget implements ComponentStub {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-        bufferBuilder.vertex((double)j, (double)m, 0.0).color(128, 128, 128, 255).next();
-        bufferBuilder.vertex((double)k, (double)m, 0.0).color(128, 128, 128, 255).next();
-        bufferBuilder.vertex((double)k, (double)l, 0.0).color(128, 128, 128, 255).next();
-        bufferBuilder.vertex((double)j, (double)l, 0.0).color(128, 128, 128, 255).next();
-        bufferBuilder.vertex((double)j, (double)(m - 1), 0.0).color(192, 192, 192, 255).next();
-        bufferBuilder.vertex((double)(k - 1), (double)(m - 1), 0.0).color(192, 192, 192, 255).next();
-        bufferBuilder.vertex((double)(k - 1), (double)l, 0.0).color(192, 192, 192, 255).next();
-        bufferBuilder.vertex((double)j, (double)l, 0.0).color(192, 192, 192, 255).next();
+        bufferBuilder.vertex(j, m, 0.0).color(128, 128, 128, 255).next();
+        bufferBuilder.vertex(k, m, 0.0).color(128, 128, 128, 255).next();
+        bufferBuilder.vertex(k, l, 0.0).color(128, 128, 128, 255).next();
+        bufferBuilder.vertex(j, l, 0.0).color(128, 128, 128, 255).next();
+        bufferBuilder.vertex(j, m - 1, 0.0).color(192, 192, 192, 255).next();
+        bufferBuilder.vertex(k - 1, m - 1, 0.0).color(192, 192, 192, 255).next();
+        bufferBuilder.vertex(k - 1, l, 0.0).color(192, 192, 192, 255).next();
+        bufferBuilder.vertex(j, l, 0.0).color(192, 192, 192, 255).next();
         tessellator.draw();
     }
 
     @Override
-    protected void drawBox(MatrixStack matrices) {
+    protected void drawBox(DrawContext drawContext) {
         int i = this.isFocused() ? -1 : outlineColor.argb();
 
         int x = this.x() + ((this.position == ScrollBarSide.RIGHT) ? 0 : 8);
 
-        fill(matrices, x, this.y(), x + this.width, this.y() + this.height, i);
-        fill(matrices, x + 1, this.y() + 1, x + this.width - 1, this.y() + this.height - 1, backgroundColor.argb());
+        drawContext.fill(x, this.y(), x + this.width, this.y() + this.height, i);
+        drawContext.fill(x + 1, this.y() + 1, x + this.width - 1, this.y() + this.height - 1, backgroundColor.argb());
     }
 
     @Override
-    public void drawFocusHighlight(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
+    public void drawFocusHighlight(OwoUIDrawContext matrices, int mouseX, int mouseY, float partialTicks, float delta) {
         // noop, since TextFieldWidget already does this
     }
 

@@ -5,7 +5,7 @@ import io.blodhgarm.personality.api.character.Character;
 import io.blodhgarm.personality.api.reveal.KnownCharacter;
 import net.minecraft.entity.player.PlayerEntity;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 /**

@@ -1,8 +1,8 @@
 package io.blodhgarm.personality.misc.pond.owo;
 
-import net.minecraft.client.util.math.MatrixStack;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 
 public interface HighlightRenderEvent {
 
-    boolean drawHighlight(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta);
+    boolean drawHighlight(OwoUIDrawContext drawContext, int mouseX, int mouseY, float partialTicks, float delta);
 }

@@ -1,8 +1,8 @@
 package io.blodhgarm.personality.mixin.client;
 
 import io.blodhgarm.personality.client.gui.components.ColorableTextBoxComponent;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public abstract class TextFieldWidgetMixin {
     @Shadow protected abstract boolean drawsBackground();
 
     @Inject(method = "renderButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;drawsBackground()Z"))
-    private void personality$disableTextFieldBackground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci){
+    private void personality$disableTextFieldBackground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci){
         if((Object) this instanceof ColorableTextBoxComponent) {
             betterBackgroundCheck = this.drawsBackground();
 
@@ -27,7 +27,7 @@ public abstract class TextFieldWidgetMixin {
     }
 
     @Inject(method = "renderButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;drawsBackground()Z", shift = At.Shift.AFTER))
-    private void personality$re_enableTextFieldBackground(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci){
+    private void personality$re_enableTextFieldBackground(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci){
         if((Object) this instanceof ColorableTextBoxComponent) this.setDrawsBackground(betterBackgroundCheck);
     }
 }

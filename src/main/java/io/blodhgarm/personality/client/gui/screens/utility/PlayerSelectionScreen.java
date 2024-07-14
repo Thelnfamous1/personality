@@ -14,7 +14,6 @@ import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.util.Drawer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.PlayerListEntry;
@@ -128,13 +127,13 @@ public class PlayerSelectionScreen extends BaseOwoScreen<FlowLayout> {
                                                 } else {
                                                     selectedPlayers.remove(entry);
                                                 }
-                                            }).renderer((matrices, button, delta) -> {
+                                            }).renderer((drawContext, button, delta) -> {
                                                 boolean isSelected = selectedPlayers.contains(entry);
 
-                                                ButtonComponent.Renderer.VANILLA.draw(matrices, button, delta);
+                                                ButtonComponent.Renderer.VANILLA.draw(drawContext, button, delta);
 
                                                 if(isSelected) {
-                                                    Drawer.drawRectOutline(matrices, button.x() + 2, button.y() + 2, button.width() - 4, button.height() - 4, new Color(0.95f, 0.95f, 0.95f).argb());
+                                                    drawContext.drawRectOutline(button.x() + 2, button.y() + 2, button.width() - 4, button.height() - 4, new Color(0.95f, 0.95f, 0.95f).argb());
                                                 }
                                             })
                                             .sizing(Sizing.fixed(8));

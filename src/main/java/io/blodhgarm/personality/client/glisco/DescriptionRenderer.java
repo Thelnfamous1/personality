@@ -4,10 +4,9 @@ import io.blodhgarm.personality.PersonalityMod;
 import io.blodhgarm.personality.api.client.HotbarMouseEvents;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Easing;
-import io.wispforest.owo.ui.util.Drawer;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -100,7 +99,7 @@ public class DescriptionRenderer implements InWorldTooltipRenderer.Renderer, Hot
     //---
 
     @Override
-    public void render(List<InWorldTooltipProvider.Entry> entries, InWorldTooltipRenderer.HitResultInfo hitResult, MatrixStack matrices, boolean newProvider, float delta) {
+    public void render(List<InWorldTooltipProvider.Entry> entries, InWorldTooltipRenderer.HitResultInfo hitResult, OwoUIDrawContext drawContext, boolean newProvider, float delta) {
         var textXOffset = 15;
         var maxTextWidth = 200; //200
         var textRender = MinecraftClient.getInstance().textRenderer;
@@ -154,13 +153,13 @@ public class DescriptionRenderer implements InWorldTooltipRenderer.Renderer, Hot
 
         this.handlers.forEach(h -> h.addWithTime((delta / 20)));
 
-        matrices.push();
+        drawContext.push();
 
 //        matrices.translate(0,-10, 0);
 //
 //        matrices.translate(0,-12,0);
 
-        matrices.translate(0,8,0);
+        drawContext.translate(0,8,0);
 
         //---- Background
 
@@ -168,17 +167,17 @@ public class DescriptionRenderer implements InWorldTooltipRenderer.Renderer, Hot
 
         int padding = 8;
 
-        matrices.push();
+        drawContext.push();
 
-        matrices.translate(textXOffset, -4.5, -5); // -0.5
+        drawContext.translate(textXOffset, -4.5, -5); // -0.5
 
-        Drawer.fill(matrices, -padding, -padding, Math.round(padding * 1.5f) + maxTextWidth, (padding * 2) + Math.round((float) maxBqHeight) + 12, this.bqHandler.get().argb());
+        drawContext.fill(-padding, -padding, Math.round(padding * 1.5f) + maxTextWidth, (padding * 2) + Math.round((float) maxBqHeight) + 12, this.bqHandler.get().argb());
 
-        matrices.pop();
+        drawContext.pop();
 
-        textRender.draw(matrices, Text.of("Description"), textXOffset, -5, (Math.max(4, (int) (0xFF * this.startFadeHandler.get())) << 24) | 0xFFFFFF);
+        drawContext.drawText(textRender, Text.of("Description"), textXOffset, -5, (Math.max(4, (int) (0xFF * this.startFadeHandler.get())) << 24) | 0xFFFFFF, false);
 
-        matrices.translate(0, 12, 0);
+        drawContext.translate(0, 12, 0);
 
         this.YOffset += 17;
 
@@ -196,12 +195,12 @@ public class DescriptionRenderer implements InWorldTooltipRenderer.Renderer, Hot
             if (textDescOffset + 10 >= 0 && !isEmpty.get()) {
                 float progress = calculateProgress(textDescOffset, maxTextHeight);
 
-                matrices.push();
-                matrices.translate(0, 0, Easing.CUBIC.apply(1 - progress) * -4);
+                drawContext.push();
+                drawContext.translate(0, 0, Easing.CUBIC.apply(1 - progress) * -4);
 
-                textRender.draw(matrices, orderedText, textXOffset, textDescOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF);
+                drawContext.drawText(textRender, orderedText, textXOffset, (int)textDescOffset, (Math.max(4, (int) (0xFF * progress)) << 24) | 0xFFFFFF, false);
 
-                matrices.pop();
+                drawContext.pop();
             }
 
             this.YOffset += 10;
@@ -209,7 +208,7 @@ public class DescriptionRenderer implements InWorldTooltipRenderer.Renderer, Hot
             if(textDescOffset() > this.maxTextHeight + 10f) break;
         }
 
-        matrices.pop();
+        drawContext.pop();
     }
 
     public float textDescOffset(){

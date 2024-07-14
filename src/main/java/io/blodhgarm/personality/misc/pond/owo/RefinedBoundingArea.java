@@ -3,7 +3,7 @@ package io.blodhgarm.personality.misc.pond.owo;
 import io.blodhgarm.personality.client.gui.utils.polygons.AbstractPolygon;
 import io.wispforest.owo.ui.core.Component;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public interface RefinedBoundingArea<T extends Component> {
 

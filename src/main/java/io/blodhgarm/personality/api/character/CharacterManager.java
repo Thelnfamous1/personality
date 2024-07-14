@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.mojang.logging.LogUtils;
-import io.blodhgarm.personality.PersonalityMod;
 import io.blodhgarm.personality.api.addon.AddonRegistry;
 import io.blodhgarm.personality.api.reveal.RevelInfoManager;
 import io.blodhgarm.personality.api.utils.PlayerAccess;
@@ -21,10 +20,10 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 import org.apache.commons.collections4.map.ListOrderedMap;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -77,7 +76,7 @@ public abstract class CharacterManager<P extends PlayerEntity, C extends Charact
     /**
      * Map that holds the reference of player and character
      */
-    @Nonnull
+    @NotNull
     public BiMap<String, String> playerToCharacterReferences(){
         return playerIDToCharacterID;
     }
@@ -85,7 +84,7 @@ public abstract class CharacterManager<P extends PlayerEntity, C extends Charact
     /**
      * A Map holding the Character Reference to its uuid
      */
-    @Nonnull
+    @NotNull
     public ListOrderedMap<String, Character> characterLookupMap(){
         return characterIDToCharacter;
     }

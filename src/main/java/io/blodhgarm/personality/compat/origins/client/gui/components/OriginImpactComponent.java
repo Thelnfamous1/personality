@@ -5,10 +5,9 @@ import io.blodhgarm.personality.compat.origins.client.gui.OriginSelectionDisplay
 import io.github.apace100.origins.Origins;
 import io.github.apace100.origins.origin.Impact;
 import io.wispforest.owo.ui.base.BaseComponent;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Sizing;
-import io.wispforest.owo.ui.util.Drawer;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import java.util.List;
@@ -43,18 +42,18 @@ public class OriginImpactComponent extends BaseComponent {
     }
 
     @Override
-    public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
+    public void draw(OwoUIDrawContext drawContext, int mouseX, int mouseY, float partialTicks, float delta) {
         RenderSystem.setShaderTexture(0, OriginSelectionDisplayAddon.ORIGINS_GUI_TEXTURE);
         RenderSystem.enableDepthTest();
 
-        matrices.push();
-        //matrices.translate(x, y, 0);
-//        matrices.scale(this.width / (float) this.regionWidth, this.height / (float) this.regionHeight, 0);
+        drawContext.push();
+        //drawContext.translate(x, y, 0);
+//        drawContext.scale(this.width / (float) this.regionWidth, this.height / (float) this.regionHeight, 0);
 
         for(int i = 0; i < 3; i++){
             int v = (impact.getImpactValue() - i > 0) ? (impact.getImpactValue() * 8) : 0;
 
-            Drawer.drawTexture(matrices,
+            drawContext.drawTexture(OriginSelectionDisplayAddon.ORIGINS_GUI_TEXTURE,
                     x + (i * 8) + (i * 2),
                     y,
                     regionWidth,
@@ -67,7 +66,7 @@ public class OriginImpactComponent extends BaseComponent {
             );
         }
 
-        matrices.pop();
+        drawContext.pop();
     }
 
     public void setImpact(Impact impact){

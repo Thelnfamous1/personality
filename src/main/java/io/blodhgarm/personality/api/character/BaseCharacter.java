@@ -6,7 +6,6 @@ import io.blodhgarm.personality.api.reveal.KnownCharacter;
 import io.blodhgarm.personality.misc.config.PersonalityConfig;
 import io.blodhgarm.personality.utils.Constants;
 import io.wispforest.owo.ui.core.Color;
-import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -18,7 +17,6 @@ import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.lang.Math.*;
 import static java.lang.Math.log;
@@ -92,7 +90,7 @@ public interface BaseCharacter {
 
     int getCurrentPlaytime();
 
-    default void beforeEvent(String event){};
+    default void beforeEvent(String event){}
 
     /**
      * Such a method is used to set the manager for the respect side either client or server. Is automatically done on deserlisation
@@ -153,7 +151,7 @@ public interface BaseCharacter {
     }
 
     default int getExtraAge() {
-        PersonalityConfig.ExtraLife config = PersonalityMod.CONFIG.extraAgeConfiguration;
+        PersonalityConfig.ExtraAgeConfiguration config = PersonalityMod.CONFIG.extraAgeConfiguration;
         double hoursPlayed = (float) getTotalPlaytime() / Constants.HOUR_IN_MILLISECONDS;
         int extraYears = 0;
 

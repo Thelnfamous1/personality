@@ -38,11 +38,10 @@
     "client.owo.BaseComponentMixin",
     "client.owo.BaseParentComponentMixin",
     "client.owo.ComponentMixin",
-    "client.owo.DrawerMixin",
-    "client.owo.DrawerMixin$DebugDrawerMixin",
     "client.owo.EntityComponentMixin",
     "client.owo.FlowLayoutMixin",
     "client.owo.OwoUIAdapterMixin",
+    "client.owo.OwoUIDrawContextMixin",
     "client.owo.ParentComponentMixin",
     "client.owo.PositioningMixin",
     "client.owo.PositioningMixin$TypeMixin"

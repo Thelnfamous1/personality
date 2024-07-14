@@ -18,12 +18,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.LogManager;
 
 public class UIOps {
 

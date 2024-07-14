@@ -1,15 +1,14 @@
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
-	id 'io.github.juuxel.loom-quiltflower' version '1.6.0'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
 
 repositories {
 	mavenLocal()
@@ -48,6 +47,7 @@ dependencies {
 
 	//Dependencies
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	//include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.0")))
 
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
 	annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
@@ -56,7 +56,7 @@ dependencies {
 
 //	include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
 
-	modImplementation ("software.bernie.geckolib:geckolib-fabric-1.19.4:${project.gecko}")
+	modImplementation ("software.bernie.geckolib:geckolib-fabric-1.20.1:${project.gecko}")
 
 	//---
 
@@ -73,14 +73,15 @@ dependencies {
 	//
 
 	//Compat only
-	modImplementation("com.github.Virtuoel:Pehkui:${pehkui_version}", { exclude group: "net.fabricmc.fabric-api" })
+	modCompileOnly("com.github.Virtuoel:Pehkui:${pehkui_version}", { exclude group: "net.fabricmc.fabric-api" })
 
 	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-	modCompileOnly modRuntimeOnly("maven.modrinth:additionalentityattributes:1.4.0+1.19.4")
+	modCompileOnly modRuntimeOnly("maven.modrinth:additionalentityattributes:${project.aea_version}")
 	//modCompileOnly("com.github.apace100:apoli:v2.6.0", { exclude group: "com.github.DaFuqs", module: "AdditionalEntityAttributes" })
 	//modCompileOnly("com.github.apace100:origins-fabric:${project.origin_version}", { exclude group: "com.github.apace100", module: "apoli" })
 
+	modCompileOnly("com.github.apace100:apoli:${project.apoli_version}", { exclude group: "com.github.DaFuqs", module: "AdditionalEntityAttributes" })
 	modImplementation("com.github.apace100:origins-fabric:${project.origin_version}", { exclude group: "com.github.DaFuqs", module: "AdditionalEntityAttributes" })
 
 	modImplementation("dev.emi:trinkets:${trinkets_version}")
@@ -108,6 +109,17 @@ dependencies {
 
 loom {
 	accessWidenerPath = file("src/main/resources/personality.accesswidener")
+
+	/*
+	splitEnvironmentSourceSets()
+
+	mods {
+		"${mod_id}" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
+	 */
 
 	runs {
 
@@ -177,18 +189,22 @@ java {
 	// if it is present.
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
+
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${project.base.archivesName.get()}"}
 	}
 }
 
 // configure the maven publication
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
 			from components.java
 		}
 	}

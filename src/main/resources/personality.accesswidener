@@ -1,7 +1,7 @@
 accessWidener	v2	named
 
-extendable method net/minecraft/client/gui/widget/ScrollableWidget drawScrollbar (Lnet/minecraft/client/util/math/MatrixStack;)V
-extendable method net/minecraft/client/gui/widget/ScrollableWidget drawBox (Lnet/minecraft/client/util/math/MatrixStack;)V
+extendable method net/minecraft/client/gui/widget/ScrollableWidget drawScrollbar (Lnet/minecraft/client/gui/DrawContext;)V
+extendable method net/minecraft/client/gui/widget/ScrollableWidget drawBox (Lnet/minecraft/client/gui/DrawContext;)V
 extendable method net/minecraft/client/gui/widget/ScrollableWidget getScrollbarThumbHeight ()I
 
 accessible field net/minecraft/client/gui/widget/ScrollableWidget scrollbarDragged Z
@@ -10,7 +10,7 @@ accessible field net/minecraft/client/gui/widget/EditBoxWidget placeholder Lnet/
 accessible field net/minecraft/client/gui/widget/EditBoxWidget editBox Lnet/minecraft/client/gui/EditBox;
 accessible field net/minecraft/client/gui/widget/EditBoxWidget tick I
 
-extendable method net/minecraft/client/gui/widget/EditBoxWidget drawSelection (Lnet/minecraft/client/util/math/MatrixStack;IIII)V
+accessible method net/minecraft/client/gui/widget/EditBoxWidget drawSelection (Lnet/minecraft/client/gui/DrawContext;IIII)V
 
 accessible class net/minecraft/client/gui/EditBox$Substring
 
@@ -29,7 +29,6 @@ accessible class net/minecraft/client/world/ClientWorld$ClientEntityHandler
 
 accessible class net/minecraft/client/font/FontStorage$GlyphPair
 accessible method net/minecraft/client/font/FontStorage$GlyphPair getGlyph (Z)Lnet/minecraft/client/font/Glyph;
-
 
 
 

@@ -2,19 +2,16 @@ package io.blodhgarm.personality.client.glisco;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.blodhgarm.personality.PersonalityMod;
-import io.blodhgarm.personality.api.client.HotbarMouseEvents;
-import io.wispforest.owo.ui.core.Easing;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.text.OrderedText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -151,7 +148,8 @@ public class InWorldTooltipRenderer implements WorldRenderEvents.AfterTranslucen
 
             float delta = currentTargetViewTime - lastTargetViewTime;
 
-            renderer.render(entryCache, info, matrices, shouldReset, delta);
+            OwoUIDrawContext drawContext = OwoUIDrawContext.of(new DrawContext(client, (VertexConsumerProvider.Immediate) context.consumers()));
+            renderer.render(entryCache, info, drawContext, shouldReset, delta);
         }
 
         targetViewGap = false;
@@ -170,7 +168,7 @@ public class InWorldTooltipRenderer implements WorldRenderEvents.AfterTranslucen
     }
 
     public interface Renderer {
-        void render(List<InWorldTooltipProvider.Entry> entries, HitResultInfo hitResult, MatrixStack matrices, boolean shouldReset, float delta);
+        void render(List<InWorldTooltipProvider.Entry> entries, HitResultInfo hitResult, OwoUIDrawContext drawContext, boolean shouldReset, float delta);
     }
 
     public record HitResultInfo(Vec3d target, Box targetShape, @Nullable InWorldTooltipProvider provider){

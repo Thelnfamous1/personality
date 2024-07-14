@@ -1,11 +1,10 @@
 package io.blodhgarm.personality.client.gui.components;
 
-import com.mojang.datafixers.util.Function5;
-import io.wispforest.owo.mixin.ui.ClickableWidgetAccessor;
+import io.wispforest.owo.mixin.ui.access.ClickableWidgetAccessor;
 import io.wispforest.owo.ui.component.ButtonComponent;
-import io.wispforest.owo.ui.util.Drawer;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -33,8 +32,8 @@ public class CustomButtonComponent extends ButtonComponent {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderer.draw(matrices, this, delta);
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderer.draw((OwoUIDrawContext) drawContext, this, delta);
 
         int color = this.active ? 0xffffff : 0xa0a0a0;
 
@@ -48,14 +47,14 @@ public class CustomButtonComponent extends ButtonComponent {
             y = Math.round(y);
         }
 
-        Function5<MatrixStack, Text, Float, Float, Integer, Integer> method = this.textShadow
-                ? textRenderer::drawWithShadow
-                : textRenderer::draw;
-
-        method.apply(matrices, this.getMessage(), x, y, color);
+        if(this.textShadow){
+            drawContext.drawTextWithShadow(textRenderer, this.getMessage(), (int)x, (int)y, color);
+        } else{
+            drawContext.drawText(textRenderer, this.getMessage(), (int)x, (int)y, color, false);
+        }
 
         var tooltip = ((ClickableWidgetAccessor) this).owo$getTooltip();
 
-        if (this.hovered && tooltip != null) Drawer.utilityScreen().renderOrderedTooltip(matrices, tooltip.getLines(MinecraftClient.getInstance()), mouseX, mouseY);
+        if (this.hovered && tooltip != null) drawContext.drawOrderedTooltip(textRenderer, tooltip.getLines(MinecraftClient.getInstance()), mouseX, mouseY);
     }
 }

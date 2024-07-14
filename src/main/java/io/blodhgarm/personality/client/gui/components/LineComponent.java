@@ -130,7 +130,7 @@ public class LineComponent extends BaseComponent implements UnimportantComponent
     }
 
     @Override
-    public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
+    public void draw(OwoUIDrawContext drawContext, int mouseX, int mouseY, float partialTicks, float delta) {
         if(hasBeenMoved){
             startPos = startPoint.getPos(this);
             endPos = endPoint.getPos(this);
@@ -147,7 +147,7 @@ public class LineComponent extends BaseComponent implements UnimportantComponent
         final int startColor = this.startColor.get().argb();
         final int endColor = this.endColor.get().argb();
 
-        drawLine(matrices, new Vec2f(startPos.x, startPos.y), new Vec2f(endPos.x, endPos.y), offsetVec, startColor, endColor);
+        drawLine(drawContext.getMatrices(), new Vec2f(startPos.x, startPos.y), new Vec2f(endPos.x, endPos.y), offsetVec, startColor, endColor);
     }
 
     public static void drawLine(MatrixStack matrices, Vec2f startPos, Vec2f endPos, float lineWidth, int startColor, int endColor){

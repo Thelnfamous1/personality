@@ -1,14 +1,14 @@
 package io.blodhgarm.personality.client.gui.utils.owo;
 
 import io.blodhgarm.personality.mixin.client.accessor.NinePatchRendererAccessor;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.ParentComponent;
 import io.wispforest.owo.ui.core.Size;
 import io.wispforest.owo.ui.core.Surface;
-import io.wispforest.owo.ui.util.NinePatchRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import io.wispforest.owo.ui.util.NinePatchTexture;
 import net.minecraft.util.Identifier;
 
-public class VariantsNinePatchRender extends NinePatchRenderer implements Surface {
+public class VariantsNinePatchRender extends NinePatchTexture implements Surface {
 
     public int offsetUIndex = 0;
     public int offsetVIndex = 0;
@@ -40,8 +40,8 @@ public class VariantsNinePatchRender extends NinePatchRenderer implements Surfac
     }
 
     @Override
-    public void draw(MatrixStack matrices, ParentComponent component) {
-        this.draw(matrices, component.x(), component.y(), component.width(), component.height());
+    public void draw(OwoUIDrawContext drawContext, ParentComponent component) {
+        this.draw(drawContext, component.x(), component.y(), component.width(), component.height());
     }
 
     public NinePatchRendererAccessor access(){

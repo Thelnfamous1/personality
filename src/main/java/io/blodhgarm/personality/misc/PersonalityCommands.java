@@ -43,7 +43,6 @@ import java.util.function.Supplier;
 
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.integer;
-import static com.mojang.brigadier.arguments.LongArgumentType.longArg;
 import static com.mojang.brigadier.arguments.StringArgumentType.*;
 import static net.minecraft.command.argument.EntityArgumentType.*;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -325,7 +324,7 @@ public class PersonalityCommands {
     private static int get(CommandContext<ServerCommandSource> context, Character c) {
         if (c == null) return msg(context, "§cYou don't have a Character");
 
-        context.getSource().sendFeedback(Text.literal("\n§nCharacter: " + c.getInfo(true) + "\n"), false);
+        context.getSource().sendFeedback(() -> Text.literal("\n§nCharacter: " + c.getInfo(true) + "\n"), false);
 
         return 1;
     }
@@ -674,7 +673,7 @@ public class PersonalityCommands {
 
 
     private static int msg(CommandContext<ServerCommandSource> context, String msg) {
-        context.getSource().sendFeedback(Text.literal("§2WJR: §a" + msg), false);
+        context.getSource().sendFeedback(() -> Text.literal("§2WJR: §a" + msg), false);
         return 1;
     }
 

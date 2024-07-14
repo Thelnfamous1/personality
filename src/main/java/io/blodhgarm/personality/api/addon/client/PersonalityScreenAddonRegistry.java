@@ -4,10 +4,9 @@ import com.mojang.authlib.GameProfile;
 import io.blodhgarm.personality.api.character.BaseCharacter;
 import io.blodhgarm.personality.client.gui.CharacterViewMode;
 import io.blodhgarm.personality.client.gui.screens.CharacterViewScreen;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

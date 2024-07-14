@@ -6,7 +6,7 @@ import io.blodhgarm.personality.misc.pond.owo.ExclusiveBoundingArea;
 import io.blodhgarm.personality.misc.pond.owo.InclusiveBoundingArea;
 import io.blodhgarm.personality.misc.pond.owo.RefinedBoundingArea;
 import io.wispforest.owo.ui.core.Component;
-import net.minecraft.client.util.math.MatrixStack;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,7 +34,7 @@ public interface ComponentMixin{
     }
 
     @Inject(method = "drawFocusHighlight", at = @At("HEAD"), cancellable = true)
-    private void checkForCustomRender(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta, CallbackInfo ci){
+    private void checkForCustomRender(OwoUIDrawContext matrices, int mouseX, int mouseY, float partialTicks, float delta, CallbackInfo ci){
         if(this instanceof CustomFocusHighlighting customFocusHighlighting && customFocusHighlighting.getEvent() != null){
             if(customFocusHighlighting.getEvent().drawHighlight(matrices, mouseX, mouseY, partialTicks, delta)) ci.cancel();
         }

@@ -30,7 +30,6 @@ import io.wispforest.owo.ui.component.DiscreteSliderComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.util.Drawer;
 import io.wispforest.owo.ui.util.ScissorStack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -45,7 +44,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -220,11 +219,11 @@ public class CharacterViewComponent extends FlowLayout implements AddonObservabl
                 return ((ButtonAddonDuck<FlowLayout>) Containers.horizontalFlow(Sizing.content(), Sizing.content()))
                         .setButtonAddon(flowLayout -> {
                             return new ButtonAddon<>(flowLayout)
-                                .useCustomButtonSurface((addon, matrices, component) -> {
+                                .useCustomButtonSurface((addon, context, component) -> {
                                     ScissorStack.drawUnclipped(() -> {
                                         if (!addon.isHovered()) return;
 
-                                        Drawer.drawRectOutline(matrices, component.x() - 2, component.y() - 2, component.width() + 4, component.height() + 4, Color.WHITE.argb());
+                                        context.drawRectOutline(component.x() - 2, component.y() - 2, component.width() + 4, component.height() + 4, Color.WHITE.argb());
                                     });
                                 })
                                 .onPress(button -> MinecraftClient.getInstance().keyboard.setClipboard(uuid));

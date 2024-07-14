@@ -3,16 +3,9 @@ package io.blodhgarm.personality.client.gui.components;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.blodhgarm.personality.client.ClientCharacterTick;
 import io.wispforest.owo.ui.base.BaseComponent;
-import io.wispforest.owo.ui.core.Animatable;
-import io.wispforest.owo.ui.core.AnimatableProperty;
-import io.wispforest.owo.ui.core.Color;
-import io.wispforest.owo.ui.core.Sizing;
-import io.wispforest.owo.ui.util.Drawer;
-import net.minecraft.client.util.math.MatrixStack;
+import io.wispforest.owo.ui.core.*;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class DiscoveryProgressComponent extends BaseComponent {
@@ -34,7 +27,7 @@ public class DiscoveryProgressComponent extends BaseComponent {
     }
 
     @Override
-    public void draw(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta) {
+    public void draw(OwoUIDrawContext drawContext, int mouseX, int mouseY, float partialTicks, float delta) {
         RenderSystem.enableBlend();
 
         RenderSystem.defaultBlendFunc();
@@ -45,11 +38,11 @@ public class DiscoveryProgressComponent extends BaseComponent {
 
         Color outlineColor = currentPrimary.interpolate(new Color(0.05f,0.05f,0.05f), 0.6f);
 
-        Drawer.drawRectOutline(matrices, x, y, width, height, withAlpha(outlineColor, alpha)); //+ 0.15f
+        drawContext.drawRectOutline(x, y, width, height, withAlpha(outlineColor, alpha)); //+ 0.15f
 
-        matrices.push();
+        drawContext.push();
 
-        matrices.translate(1, 1,0);
+        drawContext.translate(1, 1,0);
 
         int fillWidth = width - 2;
 
@@ -60,9 +53,9 @@ public class DiscoveryProgressComponent extends BaseComponent {
         int left = withAlpha(new Color(value, value, value).interpolate(outlineColor, 0.5f), alpha);
         int right = withAlpha(currentPrimary, alpha); //new Color(1.0f,1.0f,1.0f).interpolate(primaryColor,0.9f)
 
-        Drawer.drawGradientRect(matrices, x, y, Math.round(fillAmount * fillWidth), height - 2, left, right, right, left);
+        drawContext.drawGradientRect(x, y, Math.round(fillAmount * fillWidth), height - 2, left, right, right, left);
 
-        matrices.pop();
+        drawContext.pop();
 
         RenderSystem.disableBlend();
     }

@@ -157,9 +157,9 @@ public class SimpleRadialLayoutBuilder {
 
             FlowLayout entryLayout = (FlowLayout) Containers.verticalFlow(Sizing.fixed(layoutWidth), Sizing.fixed(layoutHeight))
                     .positioning(Positioning.absolute(layoutStartXPos, layoutStartYPos))
-                    .surface((matrices, component) -> {
+                    .surface((drawContext, component) -> {
                            if(component instanceof RefinedBoundingArea area && area.getRefinedBound() != null) {
-                               area.getRefinedBound().drawPolygon(matrices, new Color(0.0f, 0.0f, 0.0f, 0.25f).argb());
+                               area.getRefinedBound().drawPolygon(drawContext.getMatrices(), new Color(0.0f, 0.0f, 0.0f, 0.25f).argb());
                            }
                     });
 
@@ -354,7 +354,7 @@ public class SimpleRadialLayoutBuilder {
             //------------------------------------------------------------------------------------------------------------------
 
             ((CustomFocusHighlighting<FlowLayout>) entryLayout)
-                    .addCustomFocusRendering((matrices, mouseX, mouseY, partialTicks, delta) -> {
+                    .addCustomFocusRendering((drawContext, mouseX, mouseY, partialTicks, delta) -> {
                         return true;
                     });
         }

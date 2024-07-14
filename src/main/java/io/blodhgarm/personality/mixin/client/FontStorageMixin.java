@@ -1,10 +1,9 @@
 package io.blodhgarm.personality.mixin.client;
 
 import com.mojang.logging.LogUtils;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.font.BuiltinEmptyGlyph;
 import net.minecraft.client.font.FontStorage;
 import net.minecraft.client.font.Glyph;
+import net.minecraft.client.font.GlyphContainer;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +18,7 @@ public abstract class FontStorageMixin {
 
     @Unique private static final Logger LOGGER = LogUtils.getLogger();
 
-    @Shadow @Final private Int2ObjectMap<FontStorage.GlyphPair> glyphCache;
+    @Shadow @Final private GlyphContainer<FontStorage.GlyphPair> glyphCache;
 
     @Shadow protected abstract FontStorage.GlyphPair findGlyph(int codePoint);
 

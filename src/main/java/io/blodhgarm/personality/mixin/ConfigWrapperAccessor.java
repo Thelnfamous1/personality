@@ -10,6 +10,6 @@ import java.util.Map;
 
 @Mixin(ConfigWrapper.class)
 public interface ConfigWrapperAccessor {
-    @Invoker("collectFieldValues") void personality$collectFieldValues(Option.Key parent, Object instance, Map<Option.Key, Option.BoundField<Object>> fields) throws IllegalAccessException;
-    @Invoker("invokePredicate") boolean personality$invokePredicate(MethodHandle predicate, Object value);
+    @Invoker(value = "collectFieldValues", remap = false) void personality$collectFieldValues(Option.Key parent, Object instance, Map<Option.Key, Option.BoundField<Object>> fields) throws IllegalAccessException;
+    @Invoker(value = "invokePredicate", remap = false) boolean personality$invokePredicate(MethodHandle predicate, Object value);
 }

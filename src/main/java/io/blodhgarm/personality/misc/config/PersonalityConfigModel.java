@@ -4,7 +4,6 @@ import io.blodhgarm.personality.PersonalityMod;
 import io.blodhgarm.personality.api.reveal.InfoLevel;
 import io.wispforest.owo.config.Option;
 import io.wispforest.owo.config.annotation.*;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;

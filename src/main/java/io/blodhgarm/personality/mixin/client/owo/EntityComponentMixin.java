@@ -3,8 +3,8 @@ package io.blodhgarm.personality.mixin.client.owo;
 import io.blodhgarm.personality.misc.pond.EntityComponentExtension;
 import io.blodhgarm.personality.misc.pond.ShouldRenderNameTagExtension;
 import io.wispforest.owo.ui.component.EntityComponent;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -45,7 +45,7 @@ public class EntityComponentMixin<E extends Entity> implements ShouldRenderNameT
                     @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderDispatcher;render(Lnet/minecraft/entity/Entity;DDDFFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", shift = At.Shift.AFTER, id = "after")
             }
     )
-    private void personality$setShouldNameTagRenderOnDispatcher(MatrixStack matrices, int mouseX, int mouseY, float partialTicks, float delta, CallbackInfo ci){
+    private void personality$setShouldNameTagRenderOnDispatcher(OwoUIDrawContext drawContext, int mouseX, int mouseY, float partialTicks, float delta, CallbackInfo ci){
         ((ShouldRenderNameTagExtension)this.dispatcher).personality$setShouldNameTagRender(
                 Objects.equals(ci.getId(), "draw:before") ? personality$shouldNameTagRender() : true
         );
@@ -67,7 +67,7 @@ public class EntityComponentMixin<E extends Entity> implements ShouldRenderNameT
         return personality_removeXAngle ? 0f : angle;
     }
 
-    @ModifyArgs(method = "draw", at = @At(value = "INVOKE", target = "Lorg/joml/Vector3f;<init>(FFF)V"))
+    @ModifyArgs(method = "draw", remap = false, at = @At(value = "INVOKE", target = "Lorg/joml/Vector3f;<init>(FFF)V"))
     private void personality$modifyShaderLightVecs(Args args){
         if(!personality_removeXAngle) return;
 

@@ -4,9 +4,9 @@ import io.blodhgarm.personality.PersonalityMod;
 import io.blodhgarm.personality.client.gui.ThemeHelper;
 import io.blodhgarm.personality.client.gui.utils.owo.layout.ButtonAddon;
 import io.blodhgarm.personality.client.gui.utils.owo.layout.ButtonSurface;
+import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.ParentComponent;
 import io.wispforest.owo.ui.core.Size;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class VariantButtonSurface extends VariantsNinePatchRender implements ButtonSurface {
@@ -21,9 +21,9 @@ public class VariantButtonSurface extends VariantsNinePatchRender implements But
     }
 
     @Override
-    public void draw(ButtonAddon<?> buttonAddon, MatrixStack matrices, ParentComponent component) {
+    public void draw(ButtonAddon<?> buttonAddon, OwoUIDrawContext context, ParentComponent component) {
         this.setUIndex(buttonAddon.isActive() ? (buttonAddon.isHovered() ? 1 : 0) : 2);
 
-        this.draw(matrices, component);
+        this.draw(context, component);
     }
 }

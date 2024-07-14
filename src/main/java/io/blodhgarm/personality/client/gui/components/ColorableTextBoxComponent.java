@@ -4,7 +4,7 @@ import io.blodhgarm.personality.mixin.client.accessor.TextFieldWidgetAccessor;
 import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Sizing;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 
 public class ColorableTextBoxComponent extends TextBoxComponent {
 
@@ -47,16 +47,16 @@ public class ColorableTextBoxComponent extends TextBoxComponent {
     }
 
     @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (!this.isVisible()) return;
 
         if(((TextFieldWidgetAccessor)this).personality$drawsBackground()) {
             int i = this.isFocused() ? -1 : outlineColor.argb();
 
-            fill(matrices, this.x() - 1, this.y() - 1, this.x() + this.width + 1, this.y() + this.height + 1, i);
-            fill(matrices, this.x(), this.y(), this.x() + this.width, this.y() + this.height, backgroundColor.argb());
+            drawContext.fill(this.x() - 1, this.y() - 1, this.x() + this.width + 1, this.y() + this.height + 1, i);
+            drawContext.fill(this.x(), this.y(), this.x() + this.width, this.y() + this.height, backgroundColor.argb());
         }
 
-        super.renderButton(matrices, mouseX, mouseY, delta);
+        super.renderButton(drawContext, mouseX, mouseY, delta);
     }
 }

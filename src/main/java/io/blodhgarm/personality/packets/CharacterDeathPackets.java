@@ -43,7 +43,7 @@ public class CharacterDeathPackets {
 
     public record CustomDeathMessage(String message){
         public static void useCustomDeathMessage(CustomDeathMessage message, ServerAccess access){
-            ServerCharacterTick.killCharacter(access.player().world, access.player().getUuidAsString(), message.message);
+            ServerCharacterTick.killCharacter(access.player().getWorld(), access.player().getUuidAsString(), message.message);
         }
     }
 

@@ -20,7 +20,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageEffects;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,12 +27,10 @@ import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,7 +77,7 @@ public class ServerCharacterTick implements ServerTickEvents.EndWorldTick {
             }
 
             // Apply Slowness to Old Characters without a stick
-            PersonalityConfig.GradualValue config = PersonalityMod.CONFIG.agingSlowness;
+            PersonalityConfig.AgingSlowness config = PersonalityMod.CONFIG.agingSlowness;
             EntityAttributeInstance instance = player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
 
             boolean check = ConfigHelper.shouldApply(config, c)
@@ -239,7 +236,7 @@ public class ServerCharacterTick implements ServerTickEvents.EndWorldTick {
     public static CustomDamageSource getSource(PlayerEntity player, boolean tripped, String message){
         RegistryKey<DamageType> damageType = tripped ? ServerCharacterTick.TRIPPED_BY_DEATH_KEY : ServerCharacterTick.OLD_AGE_KEY;
 
-        return new CustomDamageSource(message, player.world.getDamageSources().registry.entryOf(damageType), player, null);
+        return new CustomDamageSource(message, player.getWorld().getDamageSources().registry.entryOf(damageType), player, null);
     }
 
     public static void personality$bootstrap(Registerable<DamageType> damageTypeRegisterable) {

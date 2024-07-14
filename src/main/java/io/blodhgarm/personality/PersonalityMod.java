@@ -66,9 +66,9 @@ public class PersonalityMod implements ModInitializer, PersonalityEntrypoint, It
     @Override
     public void onInitialize() {
         ItemGroupEvents.MODIFY_ENTRIES_ALL.register((group, entries) -> {
-            if(group == ItemGroups.TOOLS){
+            if(group == Registries.ITEM_GROUP.getOrThrow(ItemGroups.TOOLS)){
                 entries.add(BASIC_GLASSES);
-            } else if(group == ItemGroups.COMBAT){
+            } else if(group == Registries.ITEM_GROUP.getOrThrow(ItemGroups.COMBAT)){
                 entries.add(CANE);
             }
         });

@@ -1,10 +1,8 @@
 package io.blodhgarm.personality;
 
-import com.eliotlash.mclib.math.functions.limit.Min;
 import com.mojang.logging.LogUtils;
 import io.blodhgarm.personality.client.gui.screens.AdminCharacterScreen;
 import io.blodhgarm.personality.client.gui.screens.CharacterDeathScreen;
-import io.blodhgarm.personality.misc.pond.CharacterToPlayerLink;
 import io.blodhgarm.personality.packets.*;
 import io.blodhgarm.personality.server.ServerCharacters;
 import io.wispforest.owo.Owo;
@@ -13,7 +11,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.impl.util.StringUtil;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;

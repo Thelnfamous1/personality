@@ -2,7 +2,7 @@ package io.blodhgarm.personality.client.gui.utils.profiles;
 
 import com.mojang.authlib.GameProfile;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Consumer;
 

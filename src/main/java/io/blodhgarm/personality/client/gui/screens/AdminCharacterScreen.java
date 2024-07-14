@@ -36,7 +36,6 @@ import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
-import io.wispforest.owo.ui.util.Drawer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.toast.SystemToast;
@@ -405,13 +404,13 @@ public class AdminCharacterScreen extends BaseOwoScreen<FlowLayout> implements M
                                         } else {
                                             selectedCharacters.remove(character.getUUID());
                                         }
-                                    }).renderer((matrices, button, delta) -> {
+                                    }).renderer((drawContext, button, delta) -> {
                                         boolean isSelected = selectedCharacters.contains(character.getUUID());
 
-                                        ButtonComponent.Renderer.VANILLA.draw(matrices, button, delta);
+                                        ButtonComponent.Renderer.VANILLA.draw(drawContext, button, delta);
 
                                         if(isSelected) {
-                                            Drawer.drawRectOutline(matrices, button.x() + 2, button.y() + 2, button.width() - 4, button.height() - 4, new Color(0.95f, 0.95f, 0.95f).argb());
+                                            drawContext.drawRectOutline(button.x() + 2, button.y() + 2, button.width() - 4, button.height() - 4, new Color(0.95f, 0.95f, 0.95f).argb());
                                         }
                                     })
                                     .sizing(Sizing.fixed(8));
@@ -557,12 +556,12 @@ public class AdminCharacterScreen extends BaseOwoScreen<FlowLayout> implements M
 
     private static Component buildAdminButton(String tooltip, int uOffset, int bottomMargin, Consumer<ButtonComponent> buttonAction){
         return Components.button(Text.empty(), buttonAction)
-                .renderer((matrices, button, delta) -> {
-                    ButtonComponent.Renderer.VANILLA.draw(matrices, button, delta);
+                .renderer((drawContext, button, delta) -> {
+                    ButtonComponent.Renderer.VANILLA.draw(drawContext, button, delta);
 
                     RenderSystem.enableDepthTest();
                     RenderSystem.setShaderTexture(0, ADMIN_BUTTON_TEXTURE);
-                    Drawer.drawTexture(matrices, button.x() + 4, button.y() + 4, uOffset, 0, 16, 16, 96, 16);
+                    drawContext.drawTexture(ADMIN_BUTTON_TEXTURE,button.x() + 4, button.y() + 4, uOffset, 0, 16, 16, 96, 16);
                 })
                 .tooltip(Text.of(tooltip))
                 .sizing(Sizing.fixed(24), Sizing.fixed(24)) // 22

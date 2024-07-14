@@ -17,6 +17,7 @@ public class Constants {
     public static final GameProfile NONE_PROFILE = new GameProfile(Util.NIL_UUID, "NONE");
 
     public static Formatting CHARACTER_FORMATTING;
+    public static boolean shouldFilterUnimportantComponents = false;
 
     public static boolean isErrored(GameProfile profile){
         return ERROR_PROFILE.getName().equals(profile.getName());
