@@ -34,6 +34,11 @@ repositories {
 	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://maven.ladysnake.org/releases'
+		content {
+			includeGroup 'io.github.ladysnake'
+			includeGroup 'org.ladysnake'
+			includeGroupByRegex 'dev\\.onyxstudios.*'
+		}
 	}
 
 	maven { /*name "KosmX's maven"*/ url 'https://maven.kosmx.dev/' }
@@ -52,7 +57,9 @@ dependencies {
 	include "io.wispforest:owo-sentinel:${project.owo_version}"
 	annotationProcessor modImplementation("io.wispforest:owo-lib:${project.owo_version}")
 
-	include modImplementation ("io.github.ladysnake:satin:${satin_version}")
+	modImplementation "org.ladysnake:satin:${satin_version}"
+	// Include Satin as a Jar-in-Jar dependency (optional)
+	include "org.ladysnake:satin:${satin_version}"
 
 //	include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
 
