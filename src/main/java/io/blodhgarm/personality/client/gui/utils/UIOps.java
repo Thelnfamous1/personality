@@ -2,13 +2,13 @@ package io.blodhgarm.personality.client.gui.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
+import io.blodhgarm.personality.client.ClientReflectionUtils;
 import io.blodhgarm.personality.client.gui.utils.profiles.DelayableGameProfile;
 import io.blodhgarm.personality.client.gui.utils.profiles.WrappedGameProfile;
 import io.blodhgarm.personality.misc.pond.EntityComponentExtension;
 import io.blodhgarm.personality.misc.pond.ShouldRenderNameTagExtension;
 import io.blodhgarm.personality.mixin.EntityComponentAccessor;
 import io.blodhgarm.personality.utils.Constants;
-import io.blodhgarm.personality.utils.ReflectionUtils;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.component.EntityComponent;
 import io.wispforest.owo.ui.core.Sizing;
@@ -103,7 +103,7 @@ public class UIOps {
         Entity e = EntityComponent.createRenderablePlayer(profile);
 
         if(profile == null || Constants.isErrored(profile)) {
-            ReflectionUtils.editRenderablePlayerEntity(e, Constants.MISSING_SKIN_TEXTURE_ID, "default");
+            ClientReflectionUtils.editRenderablePlayerEntity(e, Constants.MISSING_SKIN_TEXTURE_ID, "default");
         }
         
         return e;

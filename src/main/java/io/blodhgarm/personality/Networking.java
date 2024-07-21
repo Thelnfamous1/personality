@@ -1,19 +1,14 @@
 package io.blodhgarm.personality;
 
 import com.mojang.logging.LogUtils;
-import io.blodhgarm.personality.client.gui.screens.AdminCharacterScreen;
-import io.blodhgarm.personality.client.gui.screens.CharacterDeathScreen;
+import io.blodhgarm.personality.client.network.ClientNetworkHandler;
 import io.blodhgarm.personality.packets.*;
 import io.blodhgarm.personality.server.ServerCharacters;
 import io.wispforest.owo.Owo;
 import io.wispforest.owo.network.OwoNetChannel;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.impl.util.StringUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.toast.SystemToast;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
@@ -21,9 +16,9 @@ import java.util.List;
 
 public class Networking {
 
-    private static Logger LOGGER = LogUtils.getLogger();
+    public static Logger LOGGER = LogUtils.getLogger();
 
-    private static List<String> adminActions = List.of(
+    public static List<String> adminActions = List.of(
             "associate",
             "disassociate",
             "create",
@@ -87,42 +82,20 @@ public class Networking {
         //S2C - Server to Client
         CHANNEL.registerClientbound(OpenPersonalityScreenS2CPacket.class, OpenPersonalityScreenS2CPacket::openScreen);
 
-        CHANNEL.registerClientbound(SyncS2CPackets.Initial.class, SyncS2CPackets.Initial::initialSync);
-        CHANNEL.registerClientbound(SyncS2CPackets.SyncCharacterData.class, SyncS2CPackets.SyncCharacterData::syncCharacter);
+        CHANNEL.registerClientbound(SyncS2CPackets.Initial.class, ClientNetworkHandler::initialSync);
+        CHANNEL.registerClientbound(SyncS2CPackets.SyncCharacterData.class, ClientNetworkHandler::syncCharacter);
         CHANNEL.registerClientbound(SyncS2CPackets.SyncAddonData.class, SyncS2CPackets.SyncAddonData::syncAddons);
         CHANNEL.registerClientbound(SyncS2CPackets.RemoveCharacter.class, SyncS2CPackets.RemoveCharacter::removeCharacter);
         CHANNEL.registerClientbound(SyncS2CPackets.Association.class, SyncS2CPackets.Association::syncAssociation);
         CHANNEL.registerClientbound(SyncS2CPackets.Dissociation.class, SyncS2CPackets.Dissociation::syncDissociation);
 
-        CHANNEL.registerClientbound(ServerCharacters.ReturnInformation.class, (message, access) -> {
-            MinecraftClient client = access.runtime();
+        CHANNEL.registerClientbound(ServerCharacters.ReturnInformation.class, ClientNetworkHandler::handleServerCharactersReturnInformation);
 
-            client.getToastManager().add(
-                    SystemToast.create(client, SystemToast.Type.PERIODIC_NOTIFICATION, Text.of(StringUtil.capitalize(message.action())), Text.of(message.returnMessage()))
-            );
+        CHANNEL.registerClientbound(SyncS2CPackets.SyncOnlinePlaytimes.class, ClientNetworkHandler::syncOnlinePlaytimes);
 
-            if(message.success()){
-                if(adminActions.contains(message.action()) && MinecraftClient.getInstance().currentScreen instanceof AdminCharacterScreen screen){
-                    screen.clearSelectedEntries();
-                }
+        CHANNEL.registerClientbound(CharacterDeathPackets.OpenCharacterDeathScreen.class, ClientNetworkHandler::handleOpenCharacterDeathScreen);
 
-                LOGGER.info("Action: {}, Message: {}", message.action(), message.returnMessage());
-            } else {
-                LOGGER.error("Action: {}, Message: {}", message.action(), message.returnMessage());
-            }
-        });
-
-        CHANNEL.registerClientbound(SyncS2CPackets.SyncOnlinePlaytimes.class, SyncS2CPackets.SyncOnlinePlaytimes::syncOnlinePlaytimes);
-
-        CHANNEL.registerClientbound(CharacterDeathPackets.OpenCharacterDeathScreen.class, (m, a) -> {
-            if (MinecraftClient.getInstance().player.getCharacter(false) != null){
-                a.runtime().setScreen(new CharacterDeathScreen());
-
-                Networking.sendC2S(new CharacterDeathPackets.DeathScreenOpenResponse(true));
-            }
-        });
-
-        CHANNEL.registerClientbound(CharacterDeathPackets.CheckDeathScreenOpen.class, (m, a) -> Networking.sendC2S(new CharacterDeathPackets.DeathScreenOpenResponse(a.runtime().currentScreen instanceof CharacterDeathScreen)));
+        CHANNEL.registerClientbound(CharacterDeathPackets.CheckDeathScreenOpen.class, ClientNetworkHandler::handleCheckDeathScreenOpen);
 
         CHANNEL.registerClientbound(CharacterDeathPackets.ReceivedDeathMessage.class, CharacterDeathPackets.ReceivedDeathMessage::outputCustomDeathMessage);
 

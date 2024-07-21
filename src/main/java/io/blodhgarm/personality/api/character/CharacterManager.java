@@ -13,7 +13,6 @@ import io.blodhgarm.personality.utils.ReflectionUtils;
 import io.blodhgarm.personality.utils.gson.ExtraTokenData;
 import io.blodhgarm.personality.utils.gson.WrappedTypeToken;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.JsonHelper;
@@ -31,7 +30,7 @@ import java.util.Objects;
 
 /**
  * Base interface for storing and managing Character data
- * @param <P> Is a version of player either {@link ClientPlayerEntity} or {@link ServerPlayerEntity}
+ * @param <P> Is a version of player either ClientPlayerEntity or {@link ServerPlayerEntity}
  */
 public abstract class CharacterManager<P extends PlayerEntity, C extends Character> implements RevelInfoManager<P> {
 

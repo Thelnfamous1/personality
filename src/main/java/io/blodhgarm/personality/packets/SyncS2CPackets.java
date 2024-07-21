@@ -1,18 +1,12 @@
 package io.blodhgarm.personality.packets;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.logging.LogUtils;
-import io.blodhgarm.personality.Networking;
-import io.blodhgarm.personality.PersonalityMod;
 import io.blodhgarm.personality.api.addon.AddonRegistry;
 import io.blodhgarm.personality.api.addon.BaseAddon;
 import io.blodhgarm.personality.api.character.Character;
-import io.blodhgarm.personality.api.core.BaseRegistry;
 import io.blodhgarm.personality.api.utils.PlayerAccess;
 import io.blodhgarm.personality.client.ClientCharacters;
 import io.blodhgarm.personality.client.gui.screens.AdminCharacterScreen;
-import io.blodhgarm.personality.utils.CharacterReferenceData;
 import io.wispforest.owo.network.ClientAccess;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,11 +17,10 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class SyncS2CPackets {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public record Initial(List<CharacterData> characters, Map<String, String> associations, boolean loadBaseRegistries) {
 
@@ -35,19 +28,6 @@ public class SyncS2CPackets {
             this(characters.entrySet().stream().map(entry -> new CharacterData(entry.getKey(), entry.getValue())).toList(), associations, loadBaseRegistries);
         }
 
-        @Environment(EnvType.CLIENT)
-        public static void initialSync(Initial message, ClientAccess access) {
-            if(message.loadBaseRegistries){
-                PersonalityMod.loadRegistries("InitialSync");
-
-                //This may be a faulty approach to confirming registries are synced due to its placement as if the packet is lost, it would allow the client to connect and issues may happen
-                Networking.sendC2S(SyncC2SPackets.RegistrySync.of(BaseRegistry.REGISTRIES));
-            }
-
-            ClientCharacters.INSTANCE.init(message.characters, message.associations);
-
-            ClientCharacters.INSTANCE.applyAddons(access.player());
-        }
     }
 
     public record CharacterData(String characterData, Map<Identifier, String> addonData){}
@@ -57,48 +37,6 @@ public class SyncS2CPackets {
      */
     public record SyncCharacterData(String characterJson, Map<Identifier, String> addonData) {
 
-        @Environment(EnvType.CLIENT)
-        public static void syncCharacter(SyncCharacterData message, ClientAccess access) {
-            Character c = ClientCharacters.INSTANCE.deserializeCharacter(message.characterJson);
-
-            c.setCharacterManager(ClientCharacters.INSTANCE);
-
-            boolean addonDataDeserialized = false;
-
-            Character oldCharacter = ClientCharacters.INSTANCE.getCharacter(c.getUUID());
-
-            if(!message.addonData.isEmpty()) {
-                Map<Identifier, BaseAddon> addonMap = AddonRegistry.INSTANCE.deserializesAddons(c, message.addonData, false);
-
-                if(message.addonData.size() != addonMap.size()){
-                    LOGGER.warn("[SyncCharacter]: Something within the addon loading process has gone wrong leading to a mismatch in addon data!");
-                }
-
-                if(!addonMap.isEmpty()){
-                    c.getAddons().putAll(addonMap);
-
-                    addonDataDeserialized = true;
-                }
-            } else if(oldCharacter != null) {
-                c.getAddons().putAll(oldCharacter.getAddons());
-            }
-
-            if(!c.equals(oldCharacter)) {
-                ClientCharacters.INSTANCE.characterLookupMap().put(c.getUUID(), c);
-
-                ClientCharacters.INSTANCE.sortCharacterLookupMap();
-            }
-
-            PlayerAccess<AbstractClientPlayerEntity> playerAccess = ClientCharacters.INSTANCE.getPlayerFromCharacter(c);
-
-            boolean shouldApplyAddons = playerAccess.playerValid(access.player()::equals) && addonDataDeserialized;
-
-            if(shouldApplyAddons) ClientCharacters.INSTANCE.applyAddons(playerAccess.player());
-
-            c.getKnownCharacters().forEach((s, knownCharacter) -> knownCharacter.setCharacterManager(ClientCharacters.INSTANCE));
-
-            if(MinecraftClient.getInstance().currentScreen instanceof AdminCharacterScreen s) s.shouldAttemptUpdate(c);
-        }
     }
 
     public record SyncAddonData(String characterUUID, Map<Identifier, String> addonData){
@@ -158,17 +96,6 @@ public class SyncS2CPackets {
     }
 
     public record SyncOnlinePlaytimes(String jsonData){
-        @Environment(EnvType.CLIENT)
-        public static void syncOnlinePlaytimes(SyncOnlinePlaytimes message, ClientAccess access){
-            ClientCharacters.INSTANCE.getGson().fromJson(message.jsonData, JsonArray.class).forEach(e -> {
-                if(!(e instanceof JsonObject o && o.has("uuid"))) return;
-
-                ClientCharacters.INSTANCE.deserializeCharacter(
-                        o.toString(),
-                        new CharacterReferenceData(ClientCharacters.INSTANCE, o.remove("uuid").getAsString())
-                );
-            });
-        }
     }
 
 }
